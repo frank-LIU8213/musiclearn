@@ -1,0 +1,58 @@
+import type { ProgressionTemplate } from '../types';
+
+export const DEFAULT_TEMPLATES: ProgressionTemplate[] = [
+  {
+    id: 'pop-1564',
+    name: '1-5-6-4 流行进行',
+    moods: ['明亮', '流行'],
+    key: 'C4',
+    scaleType: 'major',
+    numerals: ['I', 'V', 'vi', 'IV'],
+    defaultBpm: 120,
+  },
+  {
+    id: 'jazz-251',
+    name: '2-5-1 爵士进行',
+    moods: ['经典', '爵士'],
+    key: 'C4',
+    scaleType: 'major',
+    numerals: ['ii', 'V', 'I'],
+    defaultBpm: 100,
+  },
+  {
+    id: 'blues-145',
+    name: '1-4-5 布鲁斯',
+    moods: ['蓝调', '摇滚'],
+    key: 'C4',
+    scaleType: 'major',
+    numerals: ['I', 'IV', 'V'],
+    defaultBpm: 100,
+  },
+  {
+    id: 'modern-6415',
+    name: '6-4-1-5 现代流行',
+    moods: ['动感', '现代'],
+    key: 'C4',
+    scaleType: 'major',
+    numerals: ['vi', 'IV', 'I', 'V'],
+    defaultBpm: 128,
+  },
+  {
+    id: 'oldie-1645',
+    name: '1-6-4-5 老歌',
+    moods: ['怀旧', '抒情'],
+    key: 'C4',
+    scaleType: 'major',
+    numerals: ['I', 'vi', 'IV', 'V'],
+    defaultBpm: 90,
+  },
+  {
+    id: 'jazz-3625',
+    name: '3-6-2-5 爵士进行',
+    moods: ['优雅', '爵士'],
+    key: 'C4',
+    scaleType: 'major',
+    numerals: ['iii', 'vi', 'ii', 'V'],
+    defaultBpm: 110,
+  },
+];

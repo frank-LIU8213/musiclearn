@@ -34,6 +34,9 @@ export type Interval = string;
 /** Scale type */
 export type ScaleType = 'major' | 'minor';
 
+/** Structural role of a note within a chord */
+export type NoteRole = 'root' | 'third' | 'fifth' | 'seventh' | 'extension';
+
 /** Chord definition - the core data structure */
 export interface ChordDef {
   /** Display symbol, e.g. 'Cmaj7', 'F#dim' */
@@ -46,6 +49,10 @@ export interface ChordDef {
   notes: NoteName[];
   /** Intervals from root, e.g. ['P1', 'M3', 'P5', 'M7'] */
   intervals: Interval[];
+  /** Inversion degree (0: root, 1: first, 2: second, etc.) */
+  inversion?: number;
+  /** The actual bass note of this chord (might differ from root if inverted) */
+  bass?: NoteName;
 }
 
 /** A single slot in a chord progression */
@@ -74,6 +81,10 @@ export interface ProgressionTemplate {
   numerals: string[];
   /** Default BPM */
   defaultBpm: number;
+  /** Educational explanation of why this progression works */
+  explanation: string;
+  /** Famous songs that use this progression */
+  exampleSongs: string[];
 }
 
 // ============================================

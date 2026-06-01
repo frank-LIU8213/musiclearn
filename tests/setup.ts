@@ -1,6 +1,15 @@
 import '@testing-library/jest-dom/vitest';
 import { vi } from 'vitest';
 
+// Mock ResizeObserver for jsdom
+if (typeof ResizeObserver === 'undefined') {
+  global.ResizeObserver = class ResizeObserver {
+    observe() {}
+    unobserve() {}
+    disconnect() {}
+  };
+}
+
 // Mock Tone.js for jsdom environment (no Web Audio API)
 function createMockSynth() {
   return {

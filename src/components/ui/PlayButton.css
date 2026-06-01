@@ -1,0 +1,87 @@
+.play-button {
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-primary-600);
+  font-family: var(--font-mono);
+  letter-spacing: 1.5px;
+  padding: 0 16px;
+  text-align: center;
+  height: 48px;
+  font-size: 14px;
+  text-transform: uppercase;
+  font-weight: bold;
+  border-radius: 6px;
+  outline: none;
+  user-select: none;
+  cursor: pointer;
+  transform: translateY(0px);
+  position: relative;
+  box-shadow:
+    inset 0 30px 30px -15px rgba(255, 255, 255, 0.2),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.3),
+    inset 0 1px 20px rgba(0, 0, 0, 0),
+    0 4px 0 var(--color-primary-700),
+    0 4px 2px rgba(0, 0, 0, 0.3),
+    0 8px 10px rgba(0, 0, 0, 0.2),
+    0 12px 25px rgba(21, 204, 190, 0.2);
+  background: var(--color-primary-500);
+  color: #000;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: 150ms all ease-in-out;
+}
+
+.play-button .icon {
+  margin-right: 8px;
+  width: 20px;
+  height: 20px;
+  transition: all 0.5s ease-in-out;
+}
+
+.play-button:active {
+  transform: translateY(4px);
+  box-shadow:
+    inset 0 16px 2px -15px rgba(0, 0, 0, 0),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.15),
+    inset 0 1px 20px rgba(0, 0, 0, 0.1),
+    0 0 0 var(--color-primary-700),
+    0 0 0 2px rgba(255, 255, 255, 0.2),
+    0 0 0 rgba(0, 0, 0, 0),
+    0 0 0 rgba(0, 0, 0, 0);
+  background: var(--color-primary-600);
+}
+
+.play-button:hover .text {
+  transform: translateX(10px);
+}
+.play-button:hover .icon {
+  transform: translateX(5px) scale(1.1);
+}
+
+.play-button .text {
+  transition: all 0.5s ease-in-out;
+}
+
+/* Secondary variant for Pause/Stop */
+.play-button.secondary {
+  background: var(--color-muted);
+  border-color: var(--color-border);
+  color: var(--color-foreground);
+  text-shadow: none;
+  box-shadow:
+    inset 0 30px 30px -15px rgba(255, 255, 255, 0.05),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 4px 0 #111,
+    0 4px 2px rgba(0, 0, 0, 0.3),
+    0 8px 10px rgba(0, 0, 0, 0.2);
+}
+
+.play-button.secondary:active {
+  transform: translateY(4px);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05),
+    inset 0 1px 20px rgba(0, 0, 0, 0.3),
+    0 0 0 #111;
+  background: #111;
+}

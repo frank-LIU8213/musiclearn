@@ -139,6 +139,14 @@ export function getNoteRange(startNote: NoteName, endNote: NoteName): NoteName[]
 }
 
 /**
+ * Strip the octave number from a note name.
+ * e.g. 'C4' -> 'C', 'F#5' -> 'F#', 'Bb3' -> 'Bb'
+ */
+export function getNoteNameWithoutOctave(noteName: NoteName): string {
+  return noteName.replace(/\d+$/, '');
+}
+
+/**
  * Check if a note name is valid.
  */
 export function isValidNote(noteName: string): noteName is NoteName {

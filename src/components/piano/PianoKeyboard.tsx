@@ -1,27 +1,42 @@
-import { memo, useMemo } from 'react';
+import { memo, useMemo, useEffect, useRef, useState } from 'react';
 import { PianoKey } from './PianoKey';
-import type { NoteName } from '../../types';
+import type { NoteName, NoteRole } from '../../types';
 import { getNoteRange } from '../../lib/music-theory/note';
 
 interface PianoKeyboardProps {
-  activeNotes?: NoteName[];
+  activeNoteRoles?: Map<NoteName, NoteRole>;
   onKeyPress?: (note: NoteName) => void;
   range?: [NoteName, NoteName];
 }
 
-const BLACK_KEY_OFFSETS: Record<string, number> = {
-  'C#': 0.65,
-  'D#': 1.65,
-  'F#': 3.65,
-  'G#': 4.65,
-  'A#': 5.65,
-};
+const WHITE_KEY_WIDTH = 48;
+const BLACK_KEY_OFFSET = 0.55;
 
 export const PianoKeyboard = memo(function PianoKeyboard({
-  activeNotes = [],
+  activeNoteRoles = new Map(),
   onKeyPress,
-  range = ['C3', 'B4'],
+  range = ['C3', 'E5'],
 }: PianoKeyboardProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [keyWidth, setKeyWidth] = useState(WHITE_KEY_WIDTH);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const w = entry.contentRect.width;
+        if (w < 400) setKeyWidth(28);
+        else if (w < 600) setKeyWidth(36);
+        else setKeyWidth(WHITE_KEY_WIDTH);
+      }
+    });
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   const { whiteKeys, blackKeys } = useMemo(() => {
     const allNotes = getNoteRange(range[0], range[1]);
     const white: NoteName[] = [];
@@ -42,7 +57,6 @@ export const PianoKeyboard = memo(function PianoKeyboard({
     onKeyPress?.(note);
   };
 
-  // Build a map of white key positions for black key placement
   const whiteKeyPositions = useMemo(() => {
     const map: Record<string, number> = {};
     whiteKeys.forEach((note, index) => {
@@ -51,8 +65,10 @@ export const PianoKeyboard = memo(function PianoKeyboard({
     return map;
   }, [whiteKeys]);
 
+  const keyboardWidth = whiteKeys.length * keyWidth;
+
   return (
-    <div className="relative inline-flex select-none">
+    <div ref={containerRef} className="relative select-none" style={{ width: keyboardWidth, minWidth: '100%' }}>
       {/* White keys container */}
       <div className="flex">
         {whiteKeys.map((note) => (
@@ -60,26 +76,27 @@ export const PianoKeyboard = memo(function PianoKeyboard({
             key={note}
             note={note}
             isBlack={false}
-            isActive={activeNotes.includes(note)}
+            role={activeNoteRoles.get(note) ?? null}
             onClick={handleKeyPress}
           />
         ))}
       </div>
 
       {/* Black keys overlay */}
-      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+      <div
+        className="absolute top-0 left-0 pointer-events-none z-10"
+        style={{ width: keyboardWidth, height: 144 }}
+      >
         {blackKeys.map((note) => {
-          const baseNote = note.replace('#', '');
-          const octave = note.match(/\d+$/)?.[0] || '';
-          const whiteNote = baseNote + octave;
+          const match = note.match(/^([A-G])#(\d+)$/);
+          if (!match) return null;
+          const [, baseNote, octave] = match;
+          const whiteNote = `${baseNote}${octave}`;
           const whiteIndex = whiteKeyPositions[whiteNote];
 
           if (whiteIndex === undefined) return null;
 
-          const offset = BLACK_KEY_OFFSETS[note.replace(/\d+$/, '')];
-          if (offset === undefined) return null;
-
-          const leftPosition = (whiteIndex + offset) * 48; // 48px = w-12
+          const leftPosition = (whiteIndex + BLACK_KEY_OFFSET) * keyWidth;
 
           return (
             <div
@@ -94,7 +111,7 @@ export const PianoKeyboard = memo(function PianoKeyboard({
               <PianoKey
                 note={note}
                 isBlack={true}
-                isActive={activeNotes.includes(note)}
+                role={activeNoteRoles.get(note) ?? null}
                 onClick={handleKeyPress}
               />
             </div>

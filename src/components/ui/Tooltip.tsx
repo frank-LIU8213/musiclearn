@@ -1,4 +1,4 @@
-import { memo, useState, useRef } from 'react';
+import { memo, useState, useRef, useCallback } from 'react';
 import type { ChordDef } from '../../types';
 import { getChordTooltipData } from '../../lib/music-theory/chord';
 
@@ -11,6 +11,14 @@ export const Tooltip = memo(function Tooltip({ chord, children }: TooltipProps) 
   const [isVisible, setIsVisible] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
 
+  const show = useCallback(() => setIsVisible(true), []);
+  const hide = useCallback(() => setIsVisible(false), []);
+
+  // Toggle on touch / click
+  const handleClick = useCallback(() => {
+    setIsVisible((v) => !v);
+  }, []);
+
   if (!chord) return <>{children}</>;
 
   const data = getChordTooltipData(chord);
@@ -19,10 +27,13 @@ export const Tooltip = memo(function Tooltip({ chord, children }: TooltipProps) 
     <div
       ref={triggerRef}
       className="relative inline-block"
-      onMouseEnter={() => setIsVisible(true)}
-      onMouseLeave={() => setIsVisible(false)}
-      onFocus={() => setIsVisible(true)}
-      onBlur={() => setIsVisible(false)}
+      onMouseEnter={show}
+      onMouseLeave={hide}
+      onFocus={show}
+      onBlur={hide}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
     >
       {children}
       {isVisible && (

@@ -33,11 +33,19 @@ export const StaffDisplay = memo(function StaffDisplay({
         const renderer = new Renderer(container, Renderer.Backends.SVG);
         renderer.resize(width, height);
         const context = renderer.getContext();
+        
+        // Base DAW theme colors
+        const staffColor = '#555555';
+        const noteColor = '#15ccbe'; // Neon Cyan
 
         // Create stave
         const stave = new Stave(10, 10, width - 20);
         stave.addClef(clef);
         stave.setContext(context);
+        
+        // Style Stave lines and clef
+        context.setFillStyle(staffColor);
+        context.setStrokeStyle(staffColor);
         stave.draw();
 
         // Add notes if chord is provided
@@ -58,27 +66,33 @@ export const StaffDisplay = memo(function StaffDisplay({
             const staveNote = new StaveNote({
               clef,
               keys,
-              duration: 'q',
-              autoStem: true,
+              duration: 'w',
             });
+
+            // Set note color
+            staveNote.setStyle({ fillStyle: noteColor, strokeStyle: noteColor });
 
             // Add accidentals
             noteKeys.forEach((noteInfo, index) => {
               if (noteInfo!.accidental === '#') {
-                staveNote.addModifier(new Accidental('#'), index);
+                const acc = new Accidental('#');
+                staveNote.addModifier(acc, index);
               } else if (noteInfo!.accidental === 'b') {
-                staveNote.addModifier(new Accidental('b'), index);
+                const acc = new Accidental('b');
+                staveNote.addModifier(acc, index);
               }
             });
 
             // Format and draw
-            const voice = new VF.Voice({ numBeats: 1, beatValue: 4 });
+            const voice = new VF.Voice({ numBeats: 4, beatValue: 4 });
             voice.addTickables([staveNote]);
 
             const formatter = new Formatter();
             formatter.joinVoices([voice]).format([voice], width - 40);
 
-            voice.draw(context, stave);
+            voice.setStave(stave);
+            voice.setContext(context);
+            voice.draw();
           }
         }
 
@@ -94,7 +108,7 @@ export const StaffDisplay = memo(function StaffDisplay({
   return (
     <div
       ref={containerRef}
-      className="w-full h-32 border border-border rounded-lg bg-card"
+      className="w-full h-[120px] bg-transparent flex justify-center overflow-hidden"
       aria-label="五线谱显示"
     />
   );

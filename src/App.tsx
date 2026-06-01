@@ -4,7 +4,6 @@ import { StaffDisplay } from './components/staff/StaffDisplay';
 import { ProgressionPlayer } from './components/progression/ProgressionPlayer';
 import { ChordReplacer } from './components/progression/ChordReplacer';
 import { VoiceLeadingGrid } from './components/animation/VoiceLeadingGrid';
-import { Tooltip } from './components/ui/Tooltip';
 import { KeySelector } from './components/controls/KeySelector';
 import { ChordInfoPanel } from './components/education/ChordInfoPanel';
 import { ProgressionExplanation } from './components/education/ProgressionExplanation';

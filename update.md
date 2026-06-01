@@ -22,3 +22,26 @@
   * 推送日志确认：`To https://github.com/frank-LIU8213/musiclearn.git b245f7f..20e0f58 main -> main`
   * 状态确认：`Your branch is up to date with 'origin/main'`。本地 `ui` 提交已成功同步。
 * **验证状态**: 远程 GitHub 仓库数据已与本地同步，无遗留未同步的代码提交。
+
+## 2026-06-01: Cloudflare Deployment Error Resolution (Cloudflare 部署失败解决)
+
+### 1. Implementation Plan (实施计划)
+* **Goal**: 解决推送到 GitHub 后 Cloudflare Pages 自动构建/部署失败的问题。
+* **Analysis**:
+  * 错误原因：在 `src/App.tsx` 中导入了未使用的组件 `Tooltip`，这违反了 TypeScript 配置中启用的极严格的 `noUnusedLocals: true` 规则，导致 `tsc -b && vite build` 编译管道失败并返回错误码 2。
+  * 方案选择：直接从 `src/App.tsx` 中删除 `Tooltip` 的未使用导入语句，并在本地重新执行 `npm run build` 以完成闭环编译验证。
+  * 推送自动部署：将修改同步到 GitHub，借由 Cloudflare 自动的 CI/CD 流程触发重新部署。
+
+### 2. Task List (任务清单)
+* [x] 本地运行编译测试，定位到由未使用的 `Tooltip` 导入引起的编译终止
+* [x] 从 `src/App.tsx` 中移除 `Tooltip` 导入语句
+* [x] 本地运行 `npm run build` 验证构建通过，确保零编译错误
+* [x] 增量更新 `update.md` 说明文件并提交
+* [x] 将修改推送到 GitHub 远程仓库以自动激活 Cloudflare Pages 的构建与成功发布
+
+### 3. Walkthrough & Verification (变更验证)
+* **本地构建结果**: 
+  * 执行 `npm run build` 输出：`Built in 264ms`。
+  * TypeScript 检查完全通过，静态包正确打包至 `dist`。
+* **推送结果**: 代码已推送到 GitHub，Cloudflare Pages 将检测到 `main` 分支的新提交并顺利通过构建管道部署。
+
